@@ -1,0 +1,33 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "RSS reader",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hidoshik/frontend-project-11.git"
+  },
+  "author": "Valeria Baryshnikova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hidoshik/frontend-project-11/issues"
+  },
+  "type": "module",
+  "homepage": "https://github.com/hidoshik/frontend-project-11#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.13.0",
+    "prettier": "3.4.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
+  }
+}
