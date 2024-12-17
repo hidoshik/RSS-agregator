@@ -37,7 +37,7 @@ export default {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.scss$/,
@@ -62,5 +62,17 @@ export default {
       filename: 'index.html',
       template: 'index.html',
     }),
+  ],
+  ignoreWarnings: [
+    {
+      module: /module2\.js\?[34]/,
+    },
+    {
+      module: /[13]/,
+      message: /homepage/,
+    },
+    /warning from compiler/,
+    // eslint-disable-next-line no-unused-vars
+    (warning) => true,
   ],
 };
