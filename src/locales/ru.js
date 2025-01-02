@@ -17,7 +17,6 @@ export default {
       labelForInput: 'Ссылка RSS',
       submitButton: 'Добавить',
       mainDescription: 'Начните читать RSS сегодня! Это легко, это красиво.',
-      exampleInput: 'Пример: https://lorem-rss.hexlet.app/feed',
       creatorInformation: 'created by ',
     },
   },
