@@ -1,6 +1,14 @@
-const renderFormFeedback = (elements, state, i18nextInstance) => {
+const initialRender = (elements, i18nextInstance) => {
+  const initialElements = Object.entries(elements);
+  initialElements.forEach(([text, target]) => {
+    const element = target;
+    element.textContent = i18nextInstance.t(text);
+  });
+};
+const renderFormFeedback = (elements, feedbackMessage, state, i18nextInstance) => {
   const { feedbackElement } = elements;
   const { input } = elements;
+  feedbackElement.textContent = i18nextInstance.t(feedbackMessage);
   if (state.form.valid) {
     input.classList.remove('is-invalid');
     feedbackElement.classList.remove('text-danger');
@@ -13,9 +21,6 @@ const renderFormFeedback = (elements, state, i18nextInstance) => {
 
 const render = (elements, state, i18nextInstance) => (path, value) => {
   switch (path) {
-    case 'form.valid':
-      renderFormValid(elements, value, state, i18nextInstance);
-      break;
     case 'form.feedback':
       renderFormFeedback(elements, value, state, i18nextInstance);
       break;
@@ -36,4 +41,4 @@ const render = (elements, state, i18nextInstance) => (path, value) => {
   }
 };
 
-export { render };
+export { initialRender, render };
