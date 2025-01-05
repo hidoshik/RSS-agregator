@@ -14,7 +14,8 @@ const validate = (url, urls) => {
     .validate(url)
     .then(() => null)
     .catch((error) => {
-      const errorLocale = error.errors.map((err) => err.key).join('');
+      console.log(error.errors);
+      const errorLocale = error.errors.map((err) => err.key);
       return errorLocale;
     });
 };
@@ -33,7 +34,7 @@ export default () => {
       required: () => ({ key: 'emptyInput' }),
     },
     string: {
-      url: ({ url }) => ({ key: 'invalidUrl', values: { url } }),
+      url: () => ({ key: 'invalidUrl' }),
     },
   });
 
@@ -72,8 +73,7 @@ export default () => {
   };
 
   const getNewPosts = (state) => {
-    const { feedsList } = state.feeds;
-    const { postsList } = state.feeds;
+    const { feedsList, postsList } = state.feeds;
 
     const promises = feedsList.map((feed) => {
       const feedURL = addProxy(feed.url);
@@ -145,8 +145,7 @@ export default () => {
             watchedState.loadingProcess.status = 'successfulLoading';
             watchedState.loadingProcess.feedback = 'successfulLoading';
             const parsedData = parse(response.data.contents);
-            const { feedContent } = parsedData;
-            const { postsContent } = parsedData;
+            const { feedContent, postsContent } = parsedData;
             const feed = { id: uniqueId(), url: inputData, content: feedContent };
             const posts = createPosts(feed.id, postsContent);
             watchedState.feeds.feedsList.unshift(feed);
@@ -165,10 +164,11 @@ export default () => {
   });
   elements.postsContainer.addEventListener('click', (event) => {
     const { target } = event;
-    if (target.tagName === 'A') {
+
+    if (target.tagName === 'a') {
       watchedState.uiState.seenPosts.push(target.dataset.id);
     }
-    if (target.tagName === 'BUTTON') {
+    if (target.tagName === 'button') {
       watchedState.uiState.seenPosts.push(target.dataset.id);
       watchedState.uiState.modalID = target.dataset.id;
     }

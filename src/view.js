@@ -7,8 +7,8 @@ const initialRender = (elements, i18nextInstance) => {
 };
 
 const renderFormFeedback = (elements, feedbackMessage, state, i18nextInstance) => {
-  const { feedbackElement } = elements;
-  const { input } = elements;
+  const { feedbackElement, input } = elements;
+
   feedbackElement.textContent = i18nextInstance.t(feedbackMessage);
   if (state.form.valid) {
     input.classList.remove('is-invalid');
@@ -21,8 +21,8 @@ const renderFormFeedback = (elements, feedbackMessage, state, i18nextInstance) =
 };
 
 const renderLoadingFeedback = (elements, feedbackMessage, state, i18nextInstance) => {
-  const { feedbackElement } = elements;
-  const { input } = elements;
+  const { feedbackElement, input } = elements;
+
   feedbackElement.textContent = i18nextInstance.t(feedbackMessage);
   input.classList.remove('is-invalid');
   if (state.loadingProcess.status === 'successfulLoading') {
