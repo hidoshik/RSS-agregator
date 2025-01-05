@@ -2,7 +2,6 @@ import 'bootstrap';
 import * as yup from 'yup';
 import onChange from 'on-change';
 import axios from 'axios';
-import uniqueId from 'lodash';
 import i18next from 'i18next';
 import resources from './locales/ru.js';
 import { initialRender, render } from './view.js';
@@ -66,7 +65,7 @@ export default () => {
 
   const createPosts = (feedID, postsContent) => {
     const posts = postsContent.map((content) => {
-      const post = { id: uniqueId(), feedID, content };
+      const post = { id: crypto.randomUUID(), feedID, content };
       return post;
     });
     return posts;
@@ -146,7 +145,7 @@ export default () => {
             watchedState.loadingProcess.feedback = 'successfulLoading';
             const parsedData = parse(response.data.contents);
             const { feedContent, postsContent } = parsedData;
-            const feed = { id: uniqueId(), url: inputData, content: feedContent };
+            const feed = { id: crypto.randomUUID(), url: inputData, content: feedContent };
             const posts = createPosts(feed.id, postsContent);
             watchedState.feeds.feedsList.unshift(feed);
             watchedState.feeds.postsList.unshift(...posts);
@@ -165,10 +164,10 @@ export default () => {
   elements.postsContainer.addEventListener('click', (event) => {
     const { target } = event;
 
-    if (target.tagName === 'a') {
+    if (target.tagName === 'A') {
       watchedState.uiState.seenPosts.push(target.dataset.id);
     }
-    if (target.tagName === 'button') {
+    if (target.tagName === 'BUTTON') {
       watchedState.uiState.seenPosts.push(target.dataset.id);
       watchedState.uiState.modalID = target.dataset.id;
     }
