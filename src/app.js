@@ -1,23 +1,11 @@
 import 'bootstrap';
-import * as yup from 'yup';
 import onChange from 'on-change';
-import axios from 'axios';
 import i18next from 'i18next';
 import resources from './locales/ru.js';
 import { initialRender, render } from './view.js';
-import parse from './parser.js';
-
-const validate = (url, urls) => {
-  const schema = yup.string().url().notOneOf(urls).required();
-  return schema
-    .validate(url)
-    .then(() => null)
-    .catch((error) => {
-      console.log(error.errors);
-      const errorLocale = error.errors.map((err) => err.key);
-      return errorLocale;
-    });
-};
+import getNewPosts from './getNewPosts.js';
+import getResponse from './getResponse.js';
+import validate from './validate.js';
 
 export default () => {
   const i18nextInstance = i18next.createInstance();
@@ -25,16 +13,6 @@ export default () => {
     lng: 'ru',
     debug: false,
     resources,
-  });
-
-  yup.setLocale({
-    mixed: {
-      notOneOf: () => ({ key: 'duplicatedUrl' }),
-      required: () => ({ key: 'emptyInput' }),
-    },
-    string: {
-      url: () => ({ key: 'invalidUrl' }),
-    },
   });
 
   const initialState = {
@@ -54,47 +32,6 @@ export default () => {
       seenPosts: [],
       modalID: '',
     },
-  };
-
-  const addProxy = (url) => {
-    const proxyURL = new URL('https://allorigins.hexlet.app/get');
-    proxyURL.searchParams.append('disableCache', true);
-    proxyURL.searchParams.append('url', url);
-    return proxyURL;
-  };
-
-  const createPosts = (feedID, postsContent) => {
-    const posts = postsContent.map((content) => {
-      const post = { id: crypto.randomUUID(), feedID, content };
-      return post;
-    });
-    return posts;
-  };
-
-  const getNewPosts = (state) => {
-    const { feedsList, postsList } = state.feeds;
-
-    const promises = feedsList.map((feed) => {
-      const feedURL = addProxy(feed.url);
-      return axios.get(feedURL).then((response) => {
-        const parsedData = parse(response.data.contents);
-        const { postsContent } = parsedData;
-        const addedPostsLinks = postsList.map((post) => post.content.link);
-        const newPostsContent = postsContent.filter(({ link }) => !addedPostsLinks.includes(link));
-
-        if (newPostsContent.length !== 0) {
-          const newPosts = createPosts(feed.id, newPostsContent);
-          state.feeds.postsList.unshift(...newPosts);
-        }
-        return state;
-      });
-    });
-
-    Promise.all(promises).finally(() => {
-      setTimeout(() => {
-        getNewPosts(state);
-      }, 5000);
-    });
   };
 
   const elements = {
@@ -137,27 +74,7 @@ export default () => {
         watchedState.form.feedback = '';
         watchedState.loadingProcess.feedback = '';
 
-        const feedURL = addProxy(inputData);
-        axios
-          .get(feedURL)
-          .then((response) => {
-            watchedState.loadingProcess.status = 'successfulLoading';
-            watchedState.loadingProcess.feedback = 'successfulLoading';
-            const parsedData = parse(response.data.contents);
-            const { feedContent, postsContent } = parsedData;
-            const feed = { id: crypto.randomUUID(), url: inputData, content: feedContent };
-            const posts = createPosts(feed.id, postsContent);
-            watchedState.feeds.feedsList.unshift(feed);
-            watchedState.feeds.postsList.unshift(...posts);
-          })
-          .catch((error) => {
-            watchedState.loadingProcess.status = 'failedLoading';
-            if (error.message === 'invalidRSS') {
-              watchedState.loadingProcess.feedback = error.message;
-            } else if (error.message === 'Network Error') {
-              watchedState.loadingProcess.feedback = 'networkError';
-            }
-          });
+        getResponse(inputData, watchedState);
       }
     });
   });
