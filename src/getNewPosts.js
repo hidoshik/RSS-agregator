@@ -2,6 +2,7 @@ import axios from 'axios';
 import parse from './parser.js';
 import addProxy from './addProxy.js';
 import createPosts from './createPosts.js';
+import updateTime from './updateTime.js';
 
 const getNewPosts = (state) => {
   const { feedsList, postsList } = state.feeds;
@@ -25,7 +26,7 @@ const getNewPosts = (state) => {
   Promise.all(promises).finally(() => {
     setTimeout(() => {
       getNewPosts(state);
-    }, 5000);
+    }, updateTime);
   });
 };
 
