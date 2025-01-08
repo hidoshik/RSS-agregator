@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import parse from './parser.js';
 import resources from './locales/ru.js';
+import localeSettings from './locales/localeSettings.js';
 import { initialRender, render } from './view.js';
 import updateTime from './updateTime.js';
 
@@ -21,15 +22,7 @@ const validate = (url, urls) => {
     });
 };
 
-yup.setLocale({
-  mixed: {
-    notOneOf: () => ({ key: 'duplicatedUrl' }),
-    required: () => ({ key: 'emptyInput' }),
-  },
-  string: {
-    url: () => ({ key: 'invalidUrl' }),
-  },
-});
+yup.setLocale(localeSettings);
 
 const createPosts = (feedID, postsContent) => {
   const posts = postsContent.map((content) => {
