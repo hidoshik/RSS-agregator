@@ -11,13 +11,3 @@ export default (url, urls) => {
       return errorLocale;
     });
 };
-
-yup.setLocale({
-  mixed: {
-    notOneOf: () => ({ key: 'duplicatedUrl' }),
-    required: () => ({ key: 'emptyInput' }),
-  },
-  string: {
-    url: () => ({ key: 'invalidUrl' }),
-  },
-});
