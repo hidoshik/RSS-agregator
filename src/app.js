@@ -3,11 +3,33 @@ import 'bootstrap';
 import onChange from 'on-change';
 import i18next from 'i18next';
 import axios from 'axios';
+import * as yup from 'yup';
 import parse from './parser.js';
 import resources from './locales/ru.js';
 import { initialRender, render } from './view.js';
-import validate from './validate.js';
 import updateTime from './updateTime.js';
+
+const validate = (url, urls) => {
+  const schema = yup.string().url().notOneOf(urls).required();
+  return schema
+    .validate(url)
+    .then(() => null)
+    .catch((error) => {
+      console.log(error.errors);
+      const errorLocale = error.errors.map((err) => err.key);
+      return errorLocale;
+    });
+};
+
+yup.setLocale({
+  mixed: {
+    notOneOf: () => ({ key: 'duplicatedUrl' }),
+    required: () => ({ key: 'emptyInput' }),
+  },
+  string: {
+    url: () => ({ key: 'invalidUrl' }),
+  },
+});
 
 const createPosts = (feedID, postsContent) => {
   const posts = postsContent.map((content) => {
